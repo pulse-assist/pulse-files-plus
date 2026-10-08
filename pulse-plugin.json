@@ -1,0 +1,115 @@
+{
+  "id": "files-plus",
+  "name": "PulseFiles+",
+  "version": "0.1.0",
+  "pulse": ">=1.2",
+  "description": "Word, Excel и PowerPoint прямо в «Файлах»: открыть, править, создать. Агенты читают документы текстом и конвертируют в PDF",
+  "permissions": [
+    "files:open",
+    "embed",
+    "services",
+    "notify"
+  ],
+  "runtime": {
+    "kind": "docker",
+    "dockerfile": "Dockerfile",
+    "health": "/health"
+  },
+  "services": [
+    {
+      "id": "docs",
+      "image": "onlyoffice/documentserver:8.2.2@sha256:507384301fb754407308bf329b60f21927866955f33fb3c073f71b8131184ce3",
+      "port": 80,
+      "health": "/healthcheck",
+      "env": {
+        "JWT_ENABLED": "true",
+        "JWT_SECRET": "${secret:jwt}",
+        "JWT_HEADER": "AuthorizationJwt",
+        "WOPI_ENABLED": "false"
+      },
+      "volumes": {
+        "data": "/var/www/onlyoffice/Data",
+        "fonts": "/usr/share/fonts/truetype/custom"
+      },
+      "memory": "3g",
+      "cpus": 2,
+      "start_timeout": 300,
+      "proxy": {
+        "host_with_prefix": true
+      }
+    }
+  ],
+  "settings": {
+    "jwt": {
+      "type": "string",
+      "title": "JWT-секрет OnlyOffice",
+      "secret": true,
+      "generate": true,
+      "description": "Подпись конфига редактора и колбэков; создаётся сам при установке"
+    },
+    "autosave": {
+      "type": "boolean",
+      "title": "Автосохранение",
+      "default": true
+    }
+  },
+  "embed": {
+    "public_paths": [
+      "/s/docs/cache/",
+      "/callback"
+    ]
+  },
+  "files": {
+    "handlers": [
+      {
+        "id": "edit",
+        "title": "Редактор",
+        "extensions": ["docx", "xlsx", "pptx", "odt", "ods", "odp", "csv"],
+        "path": "/editor",
+        "access": "write",
+        "preview": true,
+        "mobile": "view"
+      },
+      {
+        "id": "view",
+        "title": "Просмотр",
+        "extensions": ["doc", "xls", "ppt", "rtf"],
+        "path": "/editor",
+        "access": "read",
+        "preview": true,
+        "mobile": "view"
+      },
+      {
+        "id": "pdf",
+        "title": "PulseFiles+",
+        "extensions": ["pdf"],
+        "path": "/editor",
+        "access": "read",
+        "preview": false,
+        "mobile": "view"
+      }
+    ],
+    "templates": [
+      {
+        "title": "Документ",
+        "extension": "docx",
+        "file": "templates/new.docx"
+      },
+      {
+        "title": "Таблица",
+        "extension": "xlsx",
+        "file": "templates/new.xlsx"
+      },
+      {
+        "title": "Презентация",
+        "extension": "pptx",
+        "file": "templates/new.pptx"
+      }
+    ]
+  },
+  "skills": [
+    "skills/office.md"
+  ],
+  "commands": "commands.json",
+  "install": "INSTALL.md"
+}

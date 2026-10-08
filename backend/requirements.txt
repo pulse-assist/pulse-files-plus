@@ -1,0 +1,2 @@
+# Plugin deps beyond the Pulse runtime (fastapi/uvicorn/httpx/pymongo/pulse_plugin).
+PyJWT>=2.8
