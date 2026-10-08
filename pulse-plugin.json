@@ -1,7 +1,7 @@
 {
   "id": "files-plus",
   "name": "PulseFiles+",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "pulse": ">=1.2",
   "description": "Word, Excel и PowerPoint прямо в «Файлах»: открыть, править, создать. Агенты читают документы текстом и конвертируют в PDF",
   "permissions": [

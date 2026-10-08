@@ -10,6 +10,8 @@ import os
 import time
 from pathlib import Path
 from typing import Any
+from urllib.parse import quote
+
 import httpx
 import jwt
 from fastapi import FastAPI, HTTPException, Request
