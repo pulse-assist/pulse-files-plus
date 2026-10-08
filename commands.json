@@ -1,36 +1,67 @@
-{
-  "commands": [
-    {
-      "name": "text",
-      "description": "Текст офисного документа (docx/xlsx/pptx и ODF)",
-      "args": [
-        {"name": "path", "description": "файл в каталоге", "required": true, "type": "file", "access": "read"},
-        {"name": "max_chars", "description": "обрезка текста", "required": false, "type": "integer"}
-      ]
-    },
-    {
-      "name": "convert",
-      "description": "Конвертация через OnlyOffice (pdf, docx, …)",
-      "args": [
-        {"name": "path", "description": "исходный файл", "required": true, "type": "file", "access": "read"},
-        {"name": "to", "description": "целевой формат", "required": true, "type": "string"},
-        {"name": "out", "description": "куда записать результат", "required": false, "type": "file-out"}
-      ]
-    },
-    {
-      "name": "info",
-      "description": "Метаданные документа",
-      "args": [
-        {"name": "path", "description": "файл", "required": true, "type": "file", "access": "read"}
-      ]
-    },
-    {
-      "name": "fonts",
-      "description": "Подхватить шрифты из Plugins/PulseFiles+/Шрифты/ и перезапустить docs"
-    },
-    {
-      "name": "status",
-      "description": "Состояние редактора и сервиса OnlyOffice"
-    }
-  ]
-}
+[
+  {
+    "name": "text",
+    "description": "Текст офисного документа (docx/xlsx/pptx и ODF)",
+    "args": [
+      {
+        "name": "path",
+        "description": "файл в каталоге",
+        "required": true,
+        "type": "file",
+        "access": "read"
+      },
+      {
+        "name": "max_chars",
+        "description": "обрезка текста",
+        "required": false,
+        "type": "integer"
+      }
+    ]
+  },
+  {
+    "name": "convert",
+    "description": "Конвертация через OnlyOffice (pdf, docx, …)",
+    "args": [
+      {
+        "name": "path",
+        "description": "исходный файл",
+        "required": true,
+        "type": "file",
+        "access": "read"
+      },
+      {
+        "name": "to",
+        "description": "целевой формат",
+        "required": true,
+        "type": "string"
+      },
+      {
+        "name": "out",
+        "description": "куда записать результат",
+        "required": false,
+        "type": "file-out"
+      }
+    ]
+  },
+  {
+    "name": "info",
+    "description": "Метаданные документа",
+    "args": [
+      {
+        "name": "path",
+        "description": "файл",
+        "required": true,
+        "type": "file",
+        "access": "read"
+      }
+    ]
+  },
+  {
+    "name": "fonts",
+    "description": "Подхватить шрифты из Plugins/PulseFiles+/Шрифты/ и перезапустить docs"
+  },
+  {
+    "name": "status",
+    "description": "Состояние редактора и сервиса OnlyOffice"
+  }
+]
