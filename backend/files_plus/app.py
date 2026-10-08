@@ -10,14 +10,13 @@ import os
 import time
 from pathlib import Path
 from typing import Any
-from urllib.parse import quote
-
 import httpx
 import jwt
 from fastapi import FastAPI, HTTPException, Request
 from fastapi.responses import HTMLResponse, JSONResponse, Response, StreamingResponse
 from pulse_plugin import CommandError, Plugin
 
+from files_plus.http_headers import content_disposition
 from files_plus.office_text import extract_text
 
 log = logging.getLogger("files-plus")
@@ -164,7 +163,7 @@ async def download(token: str) -> StreamingResponse:
     return StreamingResponse(
         chunks(),
         media_type="application/octet-stream",
-        headers={"Content-Disposition": f'attachment; filename="{meta["name"]}"'},
+        headers={"Content-Disposition": content_disposition(meta["name"])},
     )
 
 
