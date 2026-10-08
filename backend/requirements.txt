@@ -1,2 +1,3 @@
 # Plugin deps beyond the Pulse runtime (fastapi/uvicorn/httpx/pymongo/pulse_plugin).
+# pulse_plugin is installed from .pulse_plugin_sdk/ in the Dockerfile.
 PyJWT>=2.8

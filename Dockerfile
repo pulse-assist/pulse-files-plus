@@ -1,11 +1,13 @@
+# Docker runtime for PulseFiles+. Before build, Pulse copies pulse_plugin into
+# .pulse_plugin_sdk/ (classic builder). Local: clone SDK there, then docker build.
 FROM python:3.12-slim
 WORKDIR /plugin
-COPY backend/requirements.txt /plugin/requirements.txt
-RUN pip install --no-cache-dir -r /plugin/requirements.txt \
-    && pip install --no-cache-dir "pulse-plugin @ git+https://github.com/pulse-assist/pulse-plugin-sdk@v1.1.0" \
-    || pip install --no-cache-dir fastapi uvicorn httpx pymongo PyJWT
-COPY . /plugin
-ENV PYTHONPATH=/plugin/backend
-# Port comes from PULSE_PLUGIN_PORT (supervisor); default 8080 for local runs.
+COPY .pulse_plugin_sdk /tmp/pulse_plugin
+COPY backend/requirements.txt backend/requirements.txt
+RUN pip install --no-cache-dir /tmp/pulse_plugin \
+    && pip install --no-cache-dir -r backend/requirements.txt
+COPY . .
+WORKDIR /plugin/backend
+# Port comes from PULSE_PLUGIN_PORT; data — /plugin/data, Files folder — /plugin/files
 ENV PULSE_PLUGIN_PORT=8080
-CMD uvicorn files_plus.app:app --host 0.0.0.0 --port ${PULSE_PLUGIN_PORT}
+CMD ["sh", "-c", "exec uvicorn files_plus.app:app --host 0.0.0.0 --port ${PULSE_PLUGIN_PORT}"]

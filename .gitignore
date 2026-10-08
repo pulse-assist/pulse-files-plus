@@ -5,3 +5,4 @@ __pycache__/
 .plugin-data/
 dist/
 .DS_Store
+.pulse_plugin_sdk/

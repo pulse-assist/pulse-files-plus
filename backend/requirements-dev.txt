@@ -1,5 +1,4 @@
-pulse-plugin @ git+https://github.com/pulse-assist/pulse-plugin-sdk@v1.1.0
-pytest>=8
-PyJWT>=2.8
-httpx
 -r requirements.txt
+# Dev/test extras (SDK installed separately for local pytest).
+pytest>=8
+httpx

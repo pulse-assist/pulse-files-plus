@@ -1,7 +1,7 @@
 {
   "id": "files-plus",
   "name": "PulseFiles+",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "pulse": ">=1.2",
   "description": "Word, Excel и PowerPoint прямо в «Файлах»: открыть, править, создать. Агенты читают документы текстом и конвертируют в PDF",
   "permissions": [
@@ -64,7 +64,15 @@
       {
         "id": "edit",
         "title": "Редактор",
-        "extensions": ["docx", "xlsx", "pptx", "odt", "ods", "odp", "csv"],
+        "extensions": [
+          "docx",
+          "xlsx",
+          "pptx",
+          "odt",
+          "ods",
+          "odp",
+          "csv"
+        ],
         "path": "/editor",
         "access": "write",
         "preview": true,
@@ -73,7 +81,12 @@
       {
         "id": "view",
         "title": "Просмотр",
-        "extensions": ["doc", "xls", "ppt", "rtf"],
+        "extensions": [
+          "doc",
+          "xls",
+          "ppt",
+          "rtf"
+        ],
         "path": "/editor",
         "access": "read",
         "preview": true,
@@ -82,7 +95,9 @@
       {
         "id": "pdf",
         "title": "PulseFiles+",
-        "extensions": ["pdf"],
+        "extensions": [
+          "pdf"
+        ],
         "path": "/editor",
         "access": "read",
         "preview": false,
