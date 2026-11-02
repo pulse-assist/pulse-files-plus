@@ -30,3 +30,10 @@ def test_full_meta_keeps_complete(monkeypatch):
 
 def test_convert_key_depends_on_format():
     assert fp._doc_key("p", "v:pdf") != fp._doc_key("p", "v:docx")
+
+
+def test_convert_asks_json():
+    from pathlib import Path
+
+    src = Path(fp.__file__).read_text(encoding="utf-8")
+    assert '"Accept": "application/json"' in src

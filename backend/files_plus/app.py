@@ -298,7 +298,8 @@ def cmd_convert(args: dict) -> dict:
             resp = client.post(
                 f"{docs}/ConvertService.ashx",
                 json={**payload, "token": token},
-                headers={"AuthorizationJwt": f"Bearer {token}"},
+                # без Accept ConvertService отвечает XML
+                headers={"AuthorizationJwt": f"Bearer {token}", "Accept": "application/json"},
             )
             result = resp.json()
     except Exception as exc:  # noqa: BLE001
