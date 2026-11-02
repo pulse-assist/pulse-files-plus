@@ -68,6 +68,15 @@ def _doc_key(path: str, version: str) -> str:
     return hashlib.sha256(f"{path}:{version}".encode()).hexdigest()[:20]
 
 
+def _full_meta(ft) -> dict[str, Any]:
+    """Метаданные файла от ядра. plugin.file(arg) кладёт в meta только name и path из аргумента команды —
+    version, size, access есть лишь в ответе /api/plugin-files/{ticket}."""
+    meta = ft.meta()
+    if "version" not in meta:
+        meta = plugin.file_ticket(ft.ticket).meta()
+    return meta
+
+
 @app.get("/health")
 def health() -> dict:
     docs_ok = _docs_ready()
@@ -227,7 +236,7 @@ def cmd_text(args: dict) -> dict:
 @plugin.command("info", "Метаданные документа")
 def cmd_info(args: dict) -> dict:
     ft = plugin.file(args.get("path"))
-    meta = ft.meta()
+    meta = _full_meta(ft)
     return {
         "path": meta["path"],
         "name": meta["name"],
@@ -269,20 +278,17 @@ def cmd_convert(args: dict) -> dict:
     if not _docs_ready():
         raise CommandError("OnlyOffice ещё запускается — повторите через минуту (pulse files-plus status)")
     ft = plugin.file(args.get("path"))
-    meta = ft.meta()
-    # Use ConvertService asynchronously — simplified sync poll
+    meta = _full_meta(ft)
     docs = plugin.service_url("docs").rstrip("/")
     port = os.environ.get("PULSE_PLUGIN_PORT", "8080")
-    download_tok = _sign({"ticket": meta.get("ticket") or args["path"]["ticket"], "kind": "download"})
-    # if path arg was dict with ticket
-    if isinstance(args.get("path"), dict):
-        download_tok = _sign({"ticket": args["path"]["ticket"], "kind": "download"})
+    download_tok = _sign({"ticket": ft.ticket, "kind": "download"})
     src_url = f"http://app:{port}/download/{quote(download_tok, safe='')}"
-    key = _doc_key(meta["path"], meta["version"]) + f"-{to}"
+    # формат — в ключе: иначе OnlyOffice отдаст из кэша прошлую конвертацию того же файла в другой формат
+    key = _doc_key(meta["path"], f"{meta.get('version')}:{to}")
     payload = {
         "async": False,
         "filetype": _file_type(meta["name"]),
-        "key": key[:20],
+        "key": key,
         "outputtype": to,
         "url": src_url,
     }
@@ -292,7 +298,8 @@ def cmd_convert(args: dict) -> dict:
             resp = client.post(
                 f"{docs}/ConvertService.ashx",
                 json={**payload, "token": token},
-                headers={"AuthorizationJwt": f"Bearer {token}"},
+                # без Accept ConvertService отвечает XML
+                headers={"AuthorizationJwt": f"Bearer {token}", "Accept": "application/json"},
             )
             result = resp.json()
     except Exception as exc:  # noqa: BLE001
